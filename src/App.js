@@ -1,6 +1,9 @@
-function App() {
+function App(props) {
   return (
-    <h1>Hello, World!</h1>
+    <div>
+      <h1>Hello, World!</h1>
+    <button onClick={props.logIn}>Login</button>
+    </div>
   );
 }
 
