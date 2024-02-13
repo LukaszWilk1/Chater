@@ -47,8 +47,8 @@ function App() {
   return (
     <div>
       <h1>Sign in</h1>
-    <button onClick={logIn}>Login</button>
-    <button onClick={logOut}>LogOut</button>
+    <button type="button" class="btn btn-primary" onClick={logIn}>Login</button>
+    <button type="button" class="btn btn-primary" onClick={logOut}>Logout</button>
     {user ? "elo" : "nie elo"}
     </div>
   );
