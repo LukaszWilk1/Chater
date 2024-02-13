@@ -45,11 +45,10 @@ function App() {
   const [user] = useAuthState(auth);
 
   return (
-    <div>
-      <h1>Sign in</h1>
-    <button type="button" class="btn btn-primary" onClick={logIn}>Login</button>
-    <button type="button" class="btn btn-primary" onClick={logOut}>Logout</button>
-    {user ? "elo" : "nie elo"}
+    <div className="w-100 d-flex flex-column justify-content-center p-4">
+    <p className="h1 mt-4 mb-4 text-primary text-center">SIGN IN</p>
+    <button type="button" className="btn btn-danger w-80 mt-4 mb-4" onClick={logIn}>LOGIN WITH GOOGLE</button>
+    {user ? console.log("elo") : console.log("nie elo")}
     </div>
   );
 }
