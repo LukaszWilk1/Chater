@@ -46,7 +46,7 @@ function App() {
 
   return (
     <div className="w-100 d-flex flex-column justify-content-center p-4">
-    <p className="h1 mt-4 mb-4 text-primary text-center">SIGN IN</p>
+    <p className="h1 mt-4 mb-4 text-primary text-center">CHATER</p>
     <button type="button" className="btn btn-danger w-80 mt-4 mb-4" onClick={logIn}>LOGIN WITH GOOGLE</button>
     {user ? console.log("elo") : console.log("nie elo")}
     </div>
