@@ -41,10 +41,13 @@ function Signin(props) {
 
 function Chatroom() {
   return(
-    <div>
-      <p className="h1 mt-4 mb-4 text-primary text-center">ENTER ROOM</p>
-      <input type="text"></input>
-      <button onClick={logOut}>Logout</button>
+    <div className="w-100 d-flex flex-column justify-content-center p-4">
+      <p className="h1 mb-5 text-primary text-center">ENTER ROOM</p>
+      <div class="input-group input-group-sm mb-3">
+            <input type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm"></input>
+      </div>
+      <button className="btn btn-primary w-80 mt-2">Enter</button>
+      <button className="btn btn-primary w-80 mt-4" onClick={logOut}>Logout</button>
     </div>
   );
 }
@@ -75,7 +78,7 @@ function App() {
   }, [user]);
 
   return (
-    <div  className="w-100 d-flex flex-column justify-content-center p-4">
+    <div className="w-100 d-flex flex-column justify-content-center p-4">
       {loading ? <p>Loading...</p> : (user ? <Chatroom/> : <Signin logIn={logIn}/>)}
     </div>
   )
