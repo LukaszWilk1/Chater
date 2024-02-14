@@ -3,7 +3,7 @@ import { getAuth, signInWithPopup, GoogleAuthProvider, signOut } from "firebase/
 import { initializeApp } from 'firebase/app';
 import {getFirestore} from 'firebase/firestore';
 import { useEffect, useState } from "react";
-import { collection, addDoc } from "firebase/firestore";
+import { doc, collection, addDoc, setDoc } from "firebase/firestore";
 
 const firebaseConfig = {
   apiKey: "AIzaSyBJRpilIgvYbqX5RzsJ6JgYk3Oy-Mz7nCY",
@@ -49,8 +49,13 @@ function Chatroom() {
     setChatRoomName(e.target.value);
   }
 
-  const getChattRoomName = () => {
-    console.log(chatRoomName);
+  const getChattRoomName = async () => {
+    if((chatRoomName).trim() !== "") console.log(chatRoomName);
+    try{
+      await setDoc(doc(db, "rooms", `${chatRoomName}`), {});
+    } catch(e){
+      console.log("Error adding data: ", e);
+    }
   }
 
   return(
