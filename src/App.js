@@ -1,5 +1,5 @@
 import {useAuthState} from "react-firebase-hooks/auth";
-import { getAuth, signInWithPopup, signInWithRedirect, GoogleAuthProvider, signOut } from "firebase/auth";
+import { getAuth, signInWithPopup, GoogleAuthProvider, signOut } from "firebase/auth";
 import { initializeApp } from 'firebase/app';
 import { useEffect, useState } from "react";
 
@@ -41,24 +41,34 @@ function Signin(props) {
 
 function Chatroom() {
   return(
-    <button onClick={logOut}>Logout</button>
+    <div>
+      <p className="h1 mt-4 mb-4 text-primary text-center">ENTER ROOM</p>
+      <input type="text"></input>
+      <button onClick={logOut}>Logout</button>
+    </div>
   );
 }
 
 function App() {
 
+  const [user] = useAuthState(auth);
+  const [loading, setLoading] = useState(false);
+
   const logIn = () => {
     setLoading(true);
-    signInWithPopup(auth, provider);
+    signInWithPopup(auth, provider)
+    .then(result => {
+      //Singed in
+    })
+    .catch(err => {
+      if(err) setLoading(false);
+    })
     /*if(windowWidth > 768){
       signInWithPopup(auth, provider);
     } else if (windowWidth <= 768) {
       signInWithRedirect(auth, provider);
     }*/
   }
-
-  const [user] = useAuthState(auth);
-  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     setLoading(false);
