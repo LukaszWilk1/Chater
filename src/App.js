@@ -1,7 +1,9 @@
 import {useAuthState} from "react-firebase-hooks/auth";
 import { getAuth, signInWithPopup, GoogleAuthProvider, signOut } from "firebase/auth";
 import { initializeApp } from 'firebase/app';
+import {getFirestore} from 'firebase/firestore';
 import { useEffect, useState } from "react";
+import { collection, addDoc } from "firebase/firestore";
 
 const firebaseConfig = {
   apiKey: "AIzaSyBJRpilIgvYbqX5RzsJ6JgYk3Oy-Mz7nCY",
@@ -14,6 +16,7 @@ const firebaseConfig = {
 };
 
 const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
 
 const auth = getAuth();
 
@@ -40,13 +43,23 @@ function Signin(props) {
 }
 
 function Chatroom() {
+  const [chatRoomName, setChatRoomName] = useState('');
+
+  const handleChange = e => {
+    setChatRoomName(e.target.value);
+  }
+
+  const getChattRoomName = () => {
+    console.log(chatRoomName);
+  }
+
   return(
     <div className="w-100 d-flex flex-column justify-content-center p-4">
       <p className="h1 mb-5 text-primary text-center">ENTER ROOM</p>
       <div class="input-group input-group-sm mb-3">
-            <input type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm"></input>
+            <input type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm" name="chatRoomName" onChange={handleChange} value={chatRoomName}></input>
       </div>
-      <button className="btn btn-primary w-80 mt-2">Enter</button>
+      <button className="btn btn-primary w-80 mt-2" onClick={getChattRoomName}>Enter</button>
       <button className="btn btn-primary w-80 mt-4" onClick={logOut}>Logout</button>
     </div>
   );
