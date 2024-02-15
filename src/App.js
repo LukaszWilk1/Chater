@@ -40,20 +40,30 @@ function Signin(props) {
     <button type="button" className="btn btn-danger w-80 mt-4 mb-4" onClick={props.logIn} name="loginButton">LOGIN WITH GOOGLE</button>
     </div>
   );
+};
+
+const ChatPannel = () => {
+  return (
+    <div>
+      <p className="h1 mt-4 mb-4 text-primary text-center">WELCOME IN THE CHAT ROOM</p>
+    </div>
+  )
 }
 
 function Chatroom() {
   const [chatRoomName, setChatRoomName] = useState('');
   const [isEmpty, setIsEmpty] = useState(false);
+  const [isIn, setIsIn] = useState(false);
 
   const handleChange = e => {
-    if((e.target.value).trim() !== "") setChatRoomName(e.target.value);
+    setChatRoomName(e.target.value);
   }
 
   const getChattRoomName = async () => {
     if((chatRoomName).trim() !== "") {
       try{
         await setDoc(doc(db, "rooms", `${chatRoomName}`), {});
+        setIsIn(true);
       } catch(e){
         console.log("Error adding data: ", e);
       }
@@ -63,14 +73,16 @@ function Chatroom() {
   }
 
   return(
-    <div className="w-100 d-flex flex-column justify-content-center p-4">
-      <p className="h1 mb-5 text-primary text-center">ENTER ROOM</p>
-      <div class="input-group input-group-sm mb-3">
-            <input type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm" name="chatRoomName" onChange={handleChange} value={chatRoomName}></input>
-            {isEmpty ? <p className="text-danger">You must name the room!</p> : <></>}
+      <div>
+        {isIn ? <ChatPannel></ChatPannel> : <div className="w-100 d-flex flex-column justify-content-center p-4">
+        <p className="h1 mb-5 text-primary text-center">ENTER ROOM</p>
+        <div className="input-group input-group-sm mb-3">
+         <input type="text" className="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm" name="chatRoomName" onChange={handleChange} value={chatRoomName}></input>
+         {isEmpty ? <p className="text-danger">You must name the room!</p> : <></>}
       </div>
       <button className="btn btn-primary w-80 mt-2" onClick={getChattRoomName}>Enter</button>
       <button className="btn btn-primary w-80 mt-4" onClick={logOut}>Logout</button>
+          </div>}
     </div>
   );
 }
