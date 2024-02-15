@@ -42,10 +42,19 @@ function Signin(props) {
   );
 };
 
-const ChatPannel = () => {
+const ChatPannel = prop => {
+
+  const [exit, setExit] = useState(false);
+
+  const exitRoom = () => {
+    prop.action();
+  }
+
   return (
-    <div>
-      <p className="h1 mt-4 mb-4 text-primary text-center">WELCOME IN THE CHAT ROOM</p>
+    <div className="w-100 d-flex flex-column justify-content-center p-2">
+      <p className="h1 mt-2 mb-2 text-primary text-center">WELCOME IN THE CHAT ROOM</p>
+      <button className="btn btn-primary w-80 mt-2" onClick={exitRoom}>EXIT ROOM</button>
+      <button className="btn btn-primary w-80 mt-4" onClick={prop.logOut}>Logout</button>
     </div>
   )
 }
@@ -72,14 +81,18 @@ function Chatroom() {
     }
   }
 
+  const exitRoomFun = () => {
+    setIsIn(false);
+  }
+
   return(
       <div>
-        {isIn ? <ChatPannel></ChatPannel> : <div className="w-100 d-flex flex-column justify-content-center p-4">
+        {isIn ? <ChatPannel action={exitRoomFun} logOut={logOut}></ChatPannel> : <div className="w-100 d-flex flex-column justify-content-center p-2">
         <p className="h1 mb-5 text-primary text-center">ENTER ROOM</p>
         <div className="input-group input-group-sm mb-3">
          <input type="text" className="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm" name="chatRoomName" onChange={handleChange} value={chatRoomName}></input>
-         {isEmpty ? <p className="text-danger">You must name the room!</p> : <></>}
       </div>
+      {isEmpty ? <p className="text-danger text-center">You must name the room!</p> : <></>}
       <button className="btn btn-primary w-80 mt-2" onClick={getChattRoomName}>Enter</button>
       <button className="btn btn-primary w-80 mt-4" onClick={logOut}>Logout</button>
           </div>}
@@ -113,7 +126,7 @@ function App() {
   }, [user]);
 
   return (
-    <div className="w-100 d-flex flex-column justify-content-center p-4">
+    <div className="w-100 d-flex flex-column justify-content-center p-2">
       {loading ? <p>Loading...</p> : (user ? <Chatroom/> : <Signin logIn={logIn}/>)}
     </div>
   )
