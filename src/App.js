@@ -60,8 +60,10 @@ const ChatPannel = prop => {
   return (
     <div id="ChatPanel" className="w-100 d-flex flex-column justify-content-center p-2">
       <p className="h1 mt-2 mb-2 text-primary text-center">WELCOME IN THE {prop.roomName} CHAT ROOM</p>
-      <button className="btn btn-primary w-80 mt-2" onClick={exitRoom}>EXIT ROOM</button>
-      <button className="btn btn-primary w-80 mt-4" onClick={prop.logOut}>Logout</button>
+      <div id="butonsDiv" className="d-flex justify-content-center">
+      <button className="btn btn-primary w-50 me-1" onClick={exitRoom}>EXIT ROOM</button>
+      <button className="btn btn-primary w-50 ms-1" onClick={prop.logOut}>Logout</button>
+      </div>
     </div>
   )
 }
