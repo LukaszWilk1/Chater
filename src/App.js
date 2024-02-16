@@ -65,11 +65,13 @@ const ChatPannel = prop => {
   }
 
   return (
-    <div id="ChatPanel" className="w-100 d-flex flex-column justify-content-center p-2">
-      <p className="h1 mt-2 mb-2 text-primary text-center">WELCOME IN THE {prop.roomName} CHAT ROOM</p>
-      <div id="butonsDiv" className="d-flex justify-content-center">
-      <button className="btn btn-primary w-50 me-1" onClick={exitRoom}>EXIT ROOM</button>
-      <button className="btn btn-primary w-50 ms-1" onClick={prop.logOut}>Logout</button>
+    <div id="ChatPanel" className="h-100 w-20 p-2 d-flex flex-column col-3 border-end border-primary">
+      <div className="h-50 d-flex flex-column justify-content-Start">
+      <p className="h1 text-center text-primary"> {prop.roomName} ROOM</p>
+      </div>
+      <div className="h-50 d-flex flex-column justify-content-end">
+      <i className="bi bi-arrow-return-left btn btn-primary" onClick={exitRoom}></i>
+      <i class="bi bi-box-arrow-left btn btn-primary" onClick={prop.logOut}></i>
       </div>
     </div>
   )
@@ -133,7 +135,7 @@ function Chatroom() {
   }
 
   return(
-      <div>
+      <div className="w-100 h-100 container-fluid p-0">
         {loading ? <ChatPanelLoading></ChatPanelLoading> : (isIn ? <ChatPannel action={exitRoomFun} logOut={logOut} roomName={chatRoomName}></ChatPannel> : <div className="w-100 d-flex flex-column justify-content-center p-2">
         <p className="h1 mb-5 text-primary text-center">ENTER ROOM</p>
         <div className="input-group input-group-sm mb-3">
