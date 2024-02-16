@@ -59,6 +59,16 @@ const ChatPannel = prop => {
   )
 }
 
+const ChatPanelLoading = () => {
+  return(
+    <div className="w-100 d-flex flex-column justify-content-center p-2 placeholder-glow" aria-hidden="true">
+      <p className="h1 mt-2 mb-2 text-primary text-center placeholder-glow"><span class="placeholder">WELCOME IN THE CHAT ROOM</span></p>
+      <button className="btn btn-primary w-80 mt-2 disabled placeholder w-90" aria-disabled="true"></button>
+      <button className="btn btn-primary w-80 mt-2 disabled placeholder w-90" aria-disabled="true"></button>
+    </div>
+  )
+}
+
 function Chatroom() {
   const [chatRoomName, setChatRoomName] = useState('');
   const [isEmpty, setIsEmpty] = useState(false);
@@ -91,11 +101,7 @@ function Chatroom() {
 
   return(
       <div>
-        {loading ? <div className="w-100 d-flex flex-column justify-content-center p-2 placeholder-glow" aria-hidden="true">
-      <p className="h1 mt-2 mb-2 text-primary text-center placeholder-glow"><span class="placeholder">WELCOME IN THE CHAT ROOM</span></p>
-      <button className="btn btn-primary w-80 mt-2 disabled placeholder w-90" aria-disabled="true"></button>
-      <button className="btn btn-primary w-80 mt-2 disabled placeholder w-90" aria-disabled="true"></button>
-    </div> : (isIn ? <ChatPannel action={exitRoomFun} logOut={logOut} roomName={chatRoomName}></ChatPannel> : <div className="w-100 d-flex flex-column justify-content-center p-2">
+        {loading ? <ChatPanelLoading></ChatPanelLoading> : (isIn ? <ChatPannel action={exitRoomFun} logOut={logOut} roomName={chatRoomName}></ChatPannel> : <div className="w-100 d-flex flex-column justify-content-center p-2">
         <p className="h1 mb-5 text-primary text-center">ENTER ROOM</p>
         <div className="input-group input-group-sm mb-3">
          <input type="text" className="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm" name="chatRoomName" onChange={handleChange} value={chatRoomName}></input>
@@ -106,6 +112,17 @@ function Chatroom() {
           </div>)}
     </div>
   );
+}
+
+const ChatRoomLoading = () => {
+  return(
+    <div className="w-100 d-flex flex-column justify-content-center p-2 placeholder-glow" aria-hidden="true">
+        <p className="h1 mb-5 text-primary text-center placeholder-glow"><span className="placeholder">ENTER ROOM</span></p>
+        <span class="placeholder col-12 bg-light"></span>
+      <button className="btn btn-primary w-80 mt-2 disabled placeholder w-90" aria-disabled="true"></button>
+      <button className="btn btn-primary w-80 mt-4 disabled placeholder w-90" aria-disabled="true"></button>
+    </div>
+  )
 }
 
 function App() {
@@ -135,12 +152,7 @@ function App() {
 
   return (
     <div className="w-100 d-flex flex-column justify-content-center p-2">
-      {loading ? <div className="w-100 d-flex flex-column justify-content-center p-2 placeholder-glow" aria-hidden="true">
-        <p className="h1 mb-5 text-primary text-center placeholder-glow"><span className="placeholder"> ENTER ROOM</span></p>
-        <span class="placeholder col-12 bg-light"></span>
-      <button className="btn btn-primary w-80 mt-2 disabled placeholder w-90" aria-disabled="true"></button>
-      <button className="btn btn-primary w-80 mt-4 disabled placeholder w-90" aria-disabled="true"></button>
-          </div> : (user ? <Chatroom/> : <Signin logIn={logIn}/>)}
+      {loading ? <ChatRoomLoading/> : (user ? <Chatroom/> : <Signin logIn={logIn}/>)}
     </div>
   )
 }
