@@ -63,21 +63,25 @@ function Chatroom() {
   const [chatRoomName, setChatRoomName] = useState('');
   const [isEmpty, setIsEmpty] = useState(false);
   const [isIn, setIsIn] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const handleChange = e => {
     setChatRoomName(e.target.value);
   }
 
   const getChattRoomName = async () => {
+    setLoading(true);
     if((chatRoomName).trim() !== "") {
       try{
         await setDoc(doc(db, "rooms", `${chatRoomName}`), {});
+        setLoading(false);
         setIsIn(true);
       } catch(e){
         console.log("Error adding data: ", e);
       }
     } else {
       setIsEmpty(true);
+      setLoading(false);
     }
   }
 
@@ -87,7 +91,7 @@ function Chatroom() {
 
   return(
       <div>
-        {isIn ? <ChatPannel action={exitRoomFun} logOut={logOut} roomName={chatRoomName}></ChatPannel> : <div className="w-100 d-flex flex-column justify-content-center p-2">
+        {loading ? <p>Loading...</p> : (isIn ? <ChatPannel action={exitRoomFun} logOut={logOut} roomName={chatRoomName}></ChatPannel> : <div className="w-100 d-flex flex-column justify-content-center p-2">
         <p className="h1 mb-5 text-primary text-center">ENTER ROOM</p>
         <div className="input-group input-group-sm mb-3">
          <input type="text" className="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm" name="chatRoomName" onChange={handleChange} value={chatRoomName}></input>
@@ -95,7 +99,7 @@ function Chatroom() {
       {isEmpty ? <p className="text-danger text-center">You must name the room!</p> : <></>}
       <button className="btn btn-primary w-80 mt-2" onClick={getChattRoomName}>Enter</button>
       <button className="btn btn-primary w-80 mt-4" onClick={logOut}>Logout</button>
-          </div>}
+          </div>)}
     </div>
   );
 }
