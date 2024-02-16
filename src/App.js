@@ -65,13 +65,23 @@ const ChatPannel = prop => {
   }
 
   return (
-    <div id="ChatPanel" className="h-100 w-20 p-2 d-flex flex-column col-3 border-end border-primary">
-      <div className="h-50 d-flex flex-column justify-content-Start">
-      <p className="h1 text-center text-primary"> {prop.roomName} ROOM</p>
+    <div className="w-100 h-100 d-flex p-0">
+      <div id="ChatPanel" className="h-100 w-20 p-2 d-flex flex-column col-3 border-end border-primary">
+        <div className="h-50 d-flex flex-column justify-content-tart">
+         <p className="h1 text-center text-primary">{prop.roomName}</p>
+        </div>
+        <div className="h-50 d-flex flex-column justify-content-end">
+          <i className="bi bi-arrow-return-left btn btn-primary mb-1" onClick={exitRoom}></i>
+          <i class="bi bi-box-arrow-left btn btn-primary" onClick={prop.logOut}></i>
+        </div>
       </div>
-      <div className="h-50 d-flex flex-column justify-content-end">
-      <i className="bi bi-arrow-return-left btn btn-primary" onClick={exitRoom}></i>
-      <i class="bi bi-box-arrow-left btn btn-primary" onClick={prop.logOut}></i>
+      <div id="ChatPanel" className="h-100 w-20 p-2 d-flex flex-column col-9">
+        <div className="h-100 d-flex flex-column justify-content-end">
+        <div class="input-group">
+          <input type="text" class="form-control" placeholder="Your Message" aria-label="Recipient's username" aria-describedby="button-addon2"></input>
+          <button class="btn btn-outline-primary" type="button" id="button-addon2">Send</button>
+      </div>
+        </div>
       </div>
     </div>
   )
@@ -135,7 +145,7 @@ function Chatroom() {
   }
 
   return(
-      <div className="w-100 h-100 container-fluid p-0">
+      <div className="w-100 h-100">
         {loading ? <ChatPanelLoading></ChatPanelLoading> : (isIn ? <ChatPannel action={exitRoomFun} logOut={logOut} roomName={chatRoomName}></ChatPannel> : <div className="w-100 d-flex flex-column justify-content-center p-2">
         <p className="h1 mb-5 text-primary text-center">ENTER ROOM</p>
         <div className="input-group input-group-sm mb-3">
