@@ -34,6 +34,13 @@ const provider = new GoogleAuthProvider();
   }
 
 function Signin(props) {
+
+  const root = document.getElementById("root");
+
+  root.classList.remove("h-100");
+  root.classList.remove("w-100");
+
+
   return (
     <div className="w-100 d-flex flex-column justify-content-center p-4">
     <p className="h1 mt-4 mb-4 text-primary text-center">CHATER</p>
@@ -89,6 +96,13 @@ const ChatPanelLoading = () => {
 }
 
 function Chatroom() {
+
+  const root = document.getElementById("root");
+
+  root.classList.remove("h-100");
+  root.classList.remove("w-100");
+
+
   const [chatRoomName, setChatRoomName] = useState('');
   const [isEmpty, setIsEmpty] = useState(false);
   const [isIn, setIsIn] = useState(false);
