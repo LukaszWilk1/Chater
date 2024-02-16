@@ -43,15 +43,22 @@ function Signin(props) {
 };
 
 const ChatPannel = prop => {
+  
+  const root = document.getElementById("root");
+  const underRoot = document.getElementById("underRoot");
 
-  const [exit, setExit] = useState(false);
+  root.classList.add("h-100");
+  root.classList.add("w-100");
+
+  underRoot.classList.remove("justify-content-center");
+  underRoot.classList.add("justify-content-left");
 
   const exitRoom = () => {
     prop.action();
   }
 
   return (
-    <div className="w-100 d-flex flex-column justify-content-center p-2">
+    <div id="ChatPanel" className="w-100 d-flex flex-column justify-content-center p-2">
       <p className="h1 mt-2 mb-2 text-primary text-center">WELCOME IN THE {prop.roomName} CHAT ROOM</p>
       <button className="btn btn-primary w-80 mt-2" onClick={exitRoom}>EXIT ROOM</button>
       <button className="btn btn-primary w-80 mt-4" onClick={prop.logOut}>Logout</button>
@@ -151,7 +158,7 @@ function App() {
   }, [user]);
 
   return (
-    <div className="w-100 d-flex flex-column justify-content-center p-2">
+    <div id="underRoot" className="w-100 d-flex flex-column justify-content-center p-2">
       {loading ? <ChatRoomLoading/> : (user ? <Chatroom/> : <Signin logIn={logIn}/>)}
     </div>
   )
