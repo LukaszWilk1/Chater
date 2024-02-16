@@ -67,6 +67,16 @@ const ChatPannel = prop => {
 }
 
 const ChatPanelLoading = () => {
+
+  const root = document.getElementById("root");
+  const underRoot = document.getElementById("underRoot");
+
+  root.classList.add("h-100");
+  root.classList.add("w-100");
+
+  underRoot.classList.remove("justify-content-center");
+  underRoot.classList.add("justify-content-left");
+
   return(
     <div className="w-100 d-flex flex-column justify-content-center p-2 placeholder-glow" aria-hidden="true">
       <p className="h1 mt-2 mb-2 text-primary text-center placeholder-glow"><span class="placeholder">WELCOME IN THE CHAT ROOM</span></p>
