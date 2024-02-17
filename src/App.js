@@ -1,9 +1,10 @@
 import {useAuthState} from "react-firebase-hooks/auth";
+import {useCollectionData} from 'react-firebase-hooks/firestore'
 import { getAuth, signInWithPopup, GoogleAuthProvider, signOut } from "firebase/auth";
 import { initializeApp } from 'firebase/app';
-import {getFirestore} from 'firebase/firestore';
+import { getFirestore} from 'firebase/firestore';
 import { useEffect, useState } from "react";
-import { doc, collection, addDoc, setDoc } from "firebase/firestore";
+import { doc, collection, addDoc, setDoc, getDoc } from "firebase/firestore";
 
 const firebaseConfig = {
   apiKey: "AIzaSyBJRpilIgvYbqX5RzsJ6JgYk3Oy-Mz7nCY",
@@ -42,14 +43,23 @@ function Signin(props) {
 
 
   return (
-    <div className="w-100 d-flex flex-column justify-content-center p-4">
-    <p className="h1 mt-4 mb-4 text-primary text-center">CHATER</p>
-    <button type="button" className="btn btn-danger w-80 mt-4 mb-4" onClick={props.logIn} name="loginButton">LOGIN WITH GOOGLE</button>
+    <div className="w-100 d-flex flex-column justify-content-center p-2">
+    <p className="h1 mb-4 text-primary text-center">CHATER</p>
+    <button type="button" className="btn btn-danger w-80 mt-4" onClick={props.logIn} name="loginButton">LOGIN WITH GOOGLE</button>
     </div>
   );
 };
 
 const ChatPannel = prop => {
+
+  useEffect(() => {
+    const fetchData = async() => {
+      const docRef = doc(db, "rooms", prop.roomName);
+      const docSnap = await getDoc(docRef);
+      console.log(docSnap.data());
+    }
+    fetchData();
+  }, [])
   
   const root = document.getElementById("root");
   const underRoot = document.getElementById("underRoot");
@@ -141,12 +151,20 @@ function Chatroom() {
   const getChattRoomName = async () => {
     setLoading(true);
     if((chatRoomName).trim() !== "") {
-      try{
-        await setDoc(doc(db, "rooms", `${chatRoomName}`), {});
-        setLoading(false);
-        setIsIn(true);
-      } catch(e){
-        console.log("Error adding data: ", e);
+      const docRef = doc(db, "rooms", chatRoomName);
+      const docSnap = await getDoc(docRef);
+      setLoading(false);
+      setIsIn(true);
+      if(docSnap.exists()){
+        console.log("Doc exist");
+      } else {
+        try{
+          await setDoc(doc(db, "rooms", chatRoomName), {});
+          setLoading(false);
+          setIsIn(true);
+        } catch(e){
+          console.log("Error adding data: ", e);
+        }
       }
     } else {
       setIsEmpty(true);
