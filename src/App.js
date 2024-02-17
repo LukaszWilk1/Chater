@@ -54,9 +54,19 @@ function Signin(props) {
   );
 };
 
+const Message = prop => {
+  console.log(prop.image)
+  return(
+    <div id="message" className="d-flex text-center text-primary mb-2">
+      <img className="rounded-circle w-10" src={prop.image} alt="image"></img>
+      <p className=" h5 text-primary ms-2"> {prop.text} </p>
+    </div>
+  )
+}
+
 const ChatPannel = prop => {
   const messageRef = firestore.collection(prop.roomName);
-  const query = messageRef.orderBy('createdAt').limit(25);
+  const query = messageRef.orderBy('createdAt');
 
   const [messages] = useCollectionData(query, {idField: 'id'});
 
@@ -98,25 +108,28 @@ const ChatPannel = prop => {
 
   return (
     <div className="w-100 h-100 d-flex p-0">
-      <div id="ChatPanel" className="h-100 w-20 p-2 d-flex flex-column col-3 border-end border-primary">
-        <div className="h-50 d-flex flex-column justify-content-tart">
-         <p className="h1 text-center text-primary">{prop.roomName}</p>
+      <div id="ChatPanel" className="h-100 w-20 p-2 ps-0 d-flex flex-column col-3 border-end border-primary">
+        <div className="h-50 d-flex flex-column justify-content-start">
+          <p className="h1 text-center text-primary">{prop.roomName}</p>
         </div>
         <div className="h-50 d-flex flex-column justify-content-end">
           <i className="bi bi-arrow-return-left btn btn-primary mb-1" onClick={exitRoom}></i>
-          <i class="bi bi-box-arrow-left btn btn-primary" onClick={prop.logOut}></i>
+          <i className="bi bi-box-arrow-left btn btn-primary" onClick={prop.logOut}></i>
         </div>
       </div>
-      <div id="ChatPanel" className="h-100 w-20 p-2 d-flex flex-column col-9">
-        <div className="h-100 d-flex flex-column justify-content-end">
-        <div class="input-group">
-          <input type="text" class="form-control" placeholder="Your Message" aria-label="Recipient's username" aria-describedby="button-addon2" value={inputVal} onChange={handleChange}></input>
-          <button class="btn btn-outline-primary" type="button" id="button-addon2" onClick={send}>Send</button>
-      </div>
+      <div id="MessagePanel" className="h-100 w-20 p-2 d-flex flex-column col-9">
+        <div className="overflow-auto flex-grow-1">
+          {messages && messages.map(msg => <Message key={msg.id} image={msg.photoURL} text={msg.text} uid={msg.uid} createdAt={msg.createdAt}/>)}
+        </div>
+        <div className="input-group">
+          <input type="text" className="form-control" placeholder="Your Message" aria-label="Recipient's username" aria-describedby="button-addon2" value={inputVal} onChange={handleChange}></input>
+          <button className="btn btn-outline-primary" type="button" id="button-addon2" onClick={send}>Send</button>
         </div>
       </div>
     </div>
   )
+  
+  
 }
 
 const ChatPanelLoading = () => {
