@@ -55,35 +55,14 @@ function Signin(props) {
 };
 
 const ChatPannel = prop => {
-/*
-  const [query, setQuery] = useState();
-
-  useEffect(() => {
-    const fetchData = async() => {
-      const docRef = doc(db, "rooms", prop.roomName);
-      const docSnap = await getDoc(docRef);
-      setQuery(docSnap);
-      console.log(docSnap.data());
-    }
-    fetchData();
-  }, [])
-
-  const [messages] = useCollectionData(query);
-  console.log(messages);
-  */
   const messageRef = firestore.collection(prop.roomName);
-  const query = messageRef.limit(25);
+  const query = messageRef.orderBy('createdAt').limit(25);
 
   const [messages] = useCollectionData(query, {idField: 'id'});
+
   useEffect(() => {
     console.log(messages);
-  }, [messages])
-
-  const send = async() => {
-    await messageRef.add({
-      message: "siema",
-    })
-  };
+  }, [messages]);
 
   const root = document.getElementById("root");
   const underRoot = document.getElementById("underRoot");
@@ -97,6 +76,25 @@ const ChatPannel = prop => {
   const exitRoom = () => {
     prop.action();
   }
+
+  const [inputVal, setInputVal] = useState('');
+
+  const handleChange = e => {
+    setInputVal(e.target.value);
+  }
+
+  const send = async() => {
+
+    const { uid, photoURL } = auth.currentUser;
+
+    await messageRef.add({
+      text: inputVal,
+      createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+      uid,
+      photoURL
+    });
+    setInputVal('');
+  };
 
   return (
     <div className="w-100 h-100 d-flex p-0">
@@ -112,7 +110,7 @@ const ChatPannel = prop => {
       <div id="ChatPanel" className="h-100 w-20 p-2 d-flex flex-column col-9">
         <div className="h-100 d-flex flex-column justify-content-end">
         <div class="input-group">
-          <input type="text" class="form-control" placeholder="Your Message" aria-label="Recipient's username" aria-describedby="button-addon2"></input>
+          <input type="text" class="form-control" placeholder="Your Message" aria-label="Recipient's username" aria-describedby="button-addon2" value={inputVal} onChange={handleChange}></input>
           <button class="btn btn-outline-primary" type="button" id="button-addon2" onClick={send}>Send</button>
       </div>
         </div>
