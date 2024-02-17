@@ -4,7 +4,11 @@ import { getAuth, signInWithPopup, GoogleAuthProvider, signOut } from "firebase/
 import { initializeApp } from 'firebase/app';
 import { getFirestore} from 'firebase/firestore';
 import { useEffect, useState } from "react";
-import { doc, collection, addDoc, setDoc, getDoc } from "firebase/firestore";
+import { doc, setDoc, getDoc } from "firebase/firestore";
+import firebase from 'firebase/compat/app';
+import 'firebase/compat/auth';
+import 'firebase/compat/firestore';
+
 
 const firebaseConfig = {
   apiKey: "AIzaSyBJRpilIgvYbqX5RzsJ6JgYk3Oy-Mz7nCY",
@@ -16,13 +20,13 @@ const firebaseConfig = {
   measurementId: "G-TZ7E8Z2B8K"
 };
 
-const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
+
+firebase.initializeApp(firebaseConfig)
+let firestore = firebase.firestore();
 
 const auth = getAuth();
 
 const windowWidth = window.innerWidth;
-console.log(windowWidth);
 
 const provider = new GoogleAuthProvider();
 
@@ -51,16 +55,36 @@ function Signin(props) {
 };
 
 const ChatPannel = prop => {
+/*
+  const [query, setQuery] = useState();
 
   useEffect(() => {
     const fetchData = async() => {
       const docRef = doc(db, "rooms", prop.roomName);
       const docSnap = await getDoc(docRef);
+      setQuery(docSnap);
       console.log(docSnap.data());
     }
     fetchData();
   }, [])
-  
+
+  const [messages] = useCollectionData(query);
+  console.log(messages);
+  */
+  const messageRef = firestore.collection(prop.roomName);
+  const query = messageRef.limit(25);
+
+  const [messages] = useCollectionData(query, {idField: 'id'});
+  useEffect(() => {
+    console.log(messages);
+  }, [messages])
+
+  const send = async() => {
+    await messageRef.add({
+      message: "siema",
+    })
+  };
+
   const root = document.getElementById("root");
   const underRoot = document.getElementById("underRoot");
 
@@ -89,7 +113,7 @@ const ChatPannel = prop => {
         <div className="h-100 d-flex flex-column justify-content-end">
         <div class="input-group">
           <input type="text" class="form-control" placeholder="Your Message" aria-label="Recipient's username" aria-describedby="button-addon2"></input>
-          <button class="btn btn-outline-primary" type="button" id="button-addon2">Send</button>
+          <button class="btn btn-outline-primary" type="button" id="button-addon2" onClick={send}>Send</button>
       </div>
         </div>
       </div>
@@ -149,26 +173,8 @@ function Chatroom() {
   }
 
   const getChattRoomName = async () => {
-    setLoading(true);
     if((chatRoomName).trim() !== "") {
-      const docRef = doc(db, "rooms", chatRoomName);
-      const docSnap = await getDoc(docRef);
-      setLoading(false);
       setIsIn(true);
-      if(docSnap.exists()){
-        console.log("Doc exist");
-      } else {
-        try{
-          await setDoc(doc(db, "rooms", chatRoomName), {});
-          setLoading(false);
-          setIsIn(true);
-        } catch(e){
-          console.log("Error adding data: ", e);
-        }
-      }
-    } else {
-      setIsEmpty(true);
-      setLoading(false);
     }
   }
 
