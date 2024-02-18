@@ -108,6 +108,7 @@ function Chatroom(prop) {
 
   const [chatRoomName, setChatRoomName] = useState('');
   const [isIn, setIsIn] = useState(false);
+  const [emptyInput, setEmptyInput] = useState(false);
 
   const handleChange = e => {
     setChatRoomName(e.target.value);
@@ -118,6 +119,9 @@ function Chatroom(prop) {
 
     if((chatRoomName).trim() !== "") {
       setIsIn(true);
+      setEmptyInput(false);
+    } else {
+      setEmptyInput(true);
     }
   }
 
@@ -127,7 +131,7 @@ function Chatroom(prop) {
 
   return(
       <div className="w-100 h-100">
-        {isIn ? <ChatPannel action={exitRoomFun} logOut={prop.logOut} roomName={chatRoomName}></ChatPannel> : <EnteringRoom action={exitRoomFun} handleChange={handleChange} chatRoomName={chatRoomName} getChattRoomName={getChattRoomName} logOut={logOut}></EnteringRoom>}
+        {isIn ? <ChatPannel action={exitRoomFun} logOut={prop.logOut} roomName={chatRoomName}></ChatPannel> : <EnteringRoom isEmpty={emptyInput} action={exitRoomFun} handleChange={handleChange} chatRoomName={chatRoomName} getChattRoomName={getChattRoomName} logOut={logOut}></EnteringRoom>}
     </div>
   );
 }
