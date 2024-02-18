@@ -9,7 +9,6 @@ import Signin from './Signin.jsx'
 import Message from "./Message.jsx";
 import EnteringRoom from "./EnteringRoom.jsx";
 import ChatRoomLoading from "./ChatRoomLoading.jsx";
-import ChatPanelLoading from "./ChatPanelLoading.jsx";
 
 
 const firebaseConfig = {
@@ -21,14 +20,6 @@ const firebaseConfig = {
   appId: "1:683581810189:web:7685ea2afd95644fb55744",
   measurementId: "G-TZ7E8Z2B8K"
 };
-
-const logOut = () => {
-  signOut(auth).then(() => {
-  }).catch((error) => {
-    // An error happened.
-  });
-}
-
 
 firebase.initializeApp(firebaseConfig)
 let firestore = firebase.firestore();
@@ -44,9 +35,11 @@ const ChatPannel = prop => {
   root.classList.add('w-100');
   root.classList.add('h-100');
   
+  if(prop.roomName === ''){
+    console.log("PROP ROOM NAME EMPTY");
+  };
   const messageRef = firestore.collection(prop.roomName);
-  const query = messageRef.orderBy('createdAt');
-
+  const query = messageRef.orderBy('createdAt', 'desc');
   const [messages] = useCollectionData(query, {idField: 'id'});
 
   const exitRoom = () => {
@@ -67,12 +60,16 @@ const ChatPannel = prop => {
 
     const { uid, photoURL } = auth.currentUser;
 
-    await messageRef.add({
-      text: inputVal,
-      createdAt: firebase.firestore.FieldValue.serverTimestamp(),
-      uid,
-      photoURL
-    });
+    if(inputVal.trim() !== ''){
+      await messageRef.add({
+        text: inputVal,
+        createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+        uid,
+        photoURL
+      });
+    } else {
+      //
+    }
     setInputVal('');
   };
 
@@ -84,11 +81,11 @@ const ChatPannel = prop => {
         </div>
         <div className="h-50 d-flex flex-column justify-content-end">
           <i className="bi bi-arrow-return-left btn btn-primary mb-1" onClick={exitRoom}></i>
-          <i className="bi bi-box-arrow-left btn btn-primary" onClick={logOut}></i>
+          <i className="bi bi-box-arrow-left btn btn-primary" onClick={prop.logOut}></i>
         </div>
       </div>
       <div id="MessagePanel" className="h-100 w-20 p-2 d-flex flex-column col-9">
-        <div className="overflow-auto flex-grow-1">
+        <div className="overflow-y-auto flex-grow-1 autoscrollable-wrapper">
           {messages && messages.map(msg => <Message key={msg.id} image={msg.photoURL} text={msg.text} uid={msg.uid} createdAt={msg.createdAt}/>)}
         </div>
         <div className="input-group">
@@ -104,26 +101,38 @@ function Chatroom(prop) {
 
   const [chatRoomName, setChatRoomName] = useState('');
   const [isIn, setIsIn] = useState(false);
+  const [emptyInput, setEmptyInput] = useState(false);
+
+  useEffect(() => {
+    if(window.localStorage.getItem('chatRoomName') !== "" && window.localStorage.getItem('chatRoomName') !== null) setChatRoomName(window.localStorage.getItem('chatRoomName'));
+    setIsIn(window.localStorage.getItem('isIn'));
+  }, []);
 
   const handleChange = e => {
     setChatRoomName(e.target.value);
   }
 
   const getChattRoomName = async () => {
-    const root = document.getElementById('root');
 
     if((chatRoomName).trim() !== "") {
       setIsIn(true);
+      setEmptyInput(false);
+      window.localStorage.setItem('chatRoomName', chatRoomName);
+      window.localStorage.setItem('isIn', isIn);
+    } else {
+      setEmptyInput(true);
     }
   }
 
   const exitRoomFun = () => {
     setIsIn(false);
+    window.localStorage.removeItem('chatRoomName');
+    window.localStorage.removeItem('isIn');
   }
 
   return(
       <div className="w-100 h-100">
-        {isIn ? <ChatPannel action={exitRoomFun} logOut={prop.logOut} roomName={chatRoomName}></ChatPannel> : <EnteringRoom action={exitRoomFun} handleChange={handleChange} chatRoomName={chatRoomName} getChattRoomName={getChattRoomName} logOut={logOut}></EnteringRoom>}
+        {isIn ? <ChatPannel action={exitRoomFun} logOut={prop.logOut} roomName={chatRoomName}></ChatPannel> : <EnteringRoom isEmpty={emptyInput} action={exitRoomFun} handleChange={handleChange} chatRoomName={chatRoomName} getChattRoomName={getChattRoomName} logOut={prop.logOut}></EnteringRoom>}
     </div>
   );
 }
@@ -132,30 +141,44 @@ function App() {
 
   const [user] = useAuthState(auth);
   const [loading, setLoading] = useState(false);
+  const [isSignedIn, setIsSignedIn] = useState(false);
+
+  useEffect(() => {
+    setIsSignedIn(window.localStorage.getItem('isSignedIn'));
+  }, [])
+
+  useEffect(() => {
+    setIsSignedIn(window.localStorage.getItem('isSignedIn'));
+  }, [user]);
 
   const logIn = () => {
     setLoading(true);
     signInWithPopup(auth, provider)
     .then(result => {
-      //Singed in
+      setIsSignedIn(true);
+      window.localStorage.setItem('isSignedIn', true);
     })
     .catch(err => {
       if(err) setLoading(false);
     })
-    /*if(windowWidth > 768){
-      signInWithPopup(auth, provider);
-    } else if (windowWidth <= 768) {
-      signInWithRedirect(auth, provider);
-    }*/
   }
 
   useEffect(() => {
     setLoading(false);
   }, [user]);
 
+  const localLogOut = () => {
+    signOut(auth).then(() => {
+      window.localStorage.clear();
+      setIsSignedIn(false);
+    }).catch((error) => {
+      // An error happened.
+    });
+  }
+
   return (
     <div id="underRoot" className="w-100 d-flex flex-column justify-content-center p-2">
-      {loading ? <ChatRoomLoading/> : (user ? <Chatroom/> : <Signin logIn={logIn}/>)}
+      {loading ? <ChatRoomLoading/> : (isSignedIn ? <Chatroom logOut={localLogOut}/> : <Signin logIn={logIn}/>)}
     </div>
   )
 }
