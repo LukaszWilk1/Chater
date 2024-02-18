@@ -24,6 +24,7 @@ const firebaseConfig = {
 
 const logOut = () => {
   signOut(auth).then(() => {
+    window.localStorage.clear();
   }).catch((error) => {
     // An error happened.
   });
@@ -110,6 +111,11 @@ function Chatroom(prop) {
   const [isIn, setIsIn] = useState(false);
   const [emptyInput, setEmptyInput] = useState(false);
 
+  useEffect(() => {
+    if(window.localStorage.getItem('chatRoomName') !== "" && window.localStorage.getItem('chatRoomName') !== null) setChatRoomName(window.localStorage.getItem('chatRoomName'));
+    setIsIn(window.localStorage.getItem('isIn'));
+  }, []);
+
   const handleChange = e => {
     setChatRoomName(e.target.value);
   }
@@ -120,6 +126,8 @@ function Chatroom(prop) {
     if((chatRoomName).trim() !== "") {
       setIsIn(true);
       setEmptyInput(false);
+      window.localStorage.setItem('chatRoomName', chatRoomName);
+      window.localStorage.setItem('isIn', isIn);
     } else {
       setEmptyInput(true);
     }
@@ -127,6 +135,7 @@ function Chatroom(prop) {
 
   const exitRoomFun = () => {
     setIsIn(false);
+    window.localStorage.clear();
   }
 
   return(
