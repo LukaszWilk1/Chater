@@ -12,6 +12,13 @@ img{
     height: 30px;
 }
 
+.autoscrollable-wrapper {
+    overflow: auto;
+    max-height: 100%;
+    display: flex;
+    flex-direction: column-reverse;
+  }
+
 #message{
     max-width: 98%;
 }
