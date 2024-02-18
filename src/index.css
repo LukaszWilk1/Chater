@@ -16,6 +16,20 @@ img{
     max-width: 98%;
 }
 
+::-webkit-scrollbar {
+    width: 8px;               /* width of the entire scrollbar */
+  }
+  
+::-webkit-scrollbar-track {
+    background: #1c1e21;        /* color of the tracking area */
+  }
+  
+::-webkit-scrollbar-thumb {
+    background-color: #0d6efd;    /* color of the scroll thumb */
+    border-radius: 20px;       /* roundness of the scroll thumb */
+    border: 3px solid #1c1e21;  /* creates padding around scroll thumb */
+  }
+
 @media (max-width: 1312px){
     #message{
         max-width: 97%;
