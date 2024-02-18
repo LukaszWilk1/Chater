@@ -89,7 +89,7 @@ const ChatPannel = prop => {
         </div>
         <div className="h-50 d-flex flex-column justify-content-end">
           <i className="bi bi-arrow-return-left btn btn-primary mb-1" onClick={exitRoom}></i>
-          <i className="bi bi-box-arrow-left btn btn-primary" onClick={logOut}></i>
+          <i className="bi bi-box-arrow-left btn btn-primary" onClick={prop.logOut}></i>
         </div>
       </div>
       <div id="MessagePanel" className="h-100 w-20 p-2 d-flex flex-column col-9">
@@ -135,12 +135,13 @@ function Chatroom(prop) {
 
   const exitRoomFun = () => {
     setIsIn(false);
-    window.localStorage.clear();
+    window.localStorage.removeItem('chatRoomName');
+    window.localStorage.removeItem('isIn');
   }
 
   return(
       <div className="w-100 h-100">
-        {isIn ? <ChatPannel action={exitRoomFun} logOut={prop.logOut} roomName={chatRoomName}></ChatPannel> : <EnteringRoom isEmpty={emptyInput} action={exitRoomFun} handleChange={handleChange} chatRoomName={chatRoomName} getChattRoomName={getChattRoomName} logOut={logOut}></EnteringRoom>}
+        {isIn ? <ChatPannel action={exitRoomFun} logOut={prop.logOut} roomName={chatRoomName}></ChatPannel> : <EnteringRoom isEmpty={emptyInput} action={exitRoomFun} handleChange={handleChange} chatRoomName={chatRoomName} getChattRoomName={getChattRoomName} logOut={prop.logOut}></EnteringRoom>}
     </div>
   );
 }
@@ -149,30 +150,40 @@ function App() {
 
   const [user] = useAuthState(auth);
   const [loading, setLoading] = useState(false);
+  const [isSignedIn, setIsSignedIn] = useState(false);
+
+  useEffect(() => {
+    setIsSignedIn(window.localStorage.getItem('isSignedIn'));
+  }, [])
 
   const logIn = () => {
     setLoading(true);
     signInWithPopup(auth, provider)
     .then(result => {
-      //Singed in
+      setIsSignedIn(true);
+      window.localStorage.setItem('isSignedIn', true);
     })
     .catch(err => {
       if(err) setLoading(false);
     })
-    /*if(windowWidth > 768){
-      signInWithPopup(auth, provider);
-    } else if (windowWidth <= 768) {
-      signInWithRedirect(auth, provider);
-    }*/
   }
 
   useEffect(() => {
     setLoading(false);
   }, [user]);
 
+  const localLogOut = () => {
+    signOut(auth).then(() => {
+      window.localStorage.clear();
+      setIsSignedIn(false);
+    }).catch((error) => {
+      // An error happened.
+    });
+  }
+
   return (
     <div id="underRoot" className="w-100 d-flex flex-column justify-content-center p-2">
-      {loading ? <ChatRoomLoading/> : (user ? <Chatroom/> : <Signin logIn={logIn}/>)}
+      {loading ? <ChatRoomLoading/> : (isSignedIn ? <Chatroom logOut={localLogOut}/> : <Signin logIn={logIn}/>)}
     </div>
   )
 }
