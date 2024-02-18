@@ -88,7 +88,7 @@ const ChatPannel = prop => {
         </div>
       </div>
       <div id="MessagePanel" className="h-100 w-20 p-2 d-flex flex-column col-9">
-        <div className="overflow-auto flex-grow-1">
+        <div className="overflow-y-auto flex-grow-1">
           {messages && messages.map(msg => <Message key={msg.id} image={msg.photoURL} text={msg.text} uid={msg.uid} createdAt={msg.createdAt}/>)}
         </div>
         <div className="input-group">

@@ -12,6 +12,34 @@ img{
     height: 30px;
 }
 
+#message{
+    max-width: 98%;
+}
+
+@media (max-width: 1312px){
+    #message{
+        max-width: 97%;
+    }
+}
+
+@media (max-width: 890px){
+    #message{
+        max-width: 96%;
+    }
+}
+
+@media (max-width: 686px){
+    #message{
+        max-width: 93%;
+    }
+}
+
+@media (max-width: 435px){
+    #message{
+        max-width: 90%;
+    }
+}
+
 @media (min-width: 992px) {
     #root{
         background-color: #1c1e21;
