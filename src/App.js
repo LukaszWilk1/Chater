@@ -67,12 +67,16 @@ const ChatPannel = prop => {
 
     const { uid, photoURL } = auth.currentUser;
 
-    await messageRef.add({
-      text: inputVal,
-      createdAt: firebase.firestore.FieldValue.serverTimestamp(),
-      uid,
-      photoURL
-    });
+    if(inputVal.trim() !== ''){
+      await messageRef.add({
+        text: inputVal,
+        createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+        uid,
+        photoURL
+      });
+    } else {
+      //
+    }
     setInputVal('');
   };
 
