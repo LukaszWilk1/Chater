@@ -9,7 +9,6 @@ import Signin from './Signin.jsx'
 import Message from "./Message.jsx";
 import EnteringRoom from "./EnteringRoom.jsx";
 import ChatRoomLoading from "./ChatRoomLoading.jsx";
-import ChatPanelLoading from "./ChatPanelLoading.jsx";
 
 
 const firebaseConfig = {
@@ -21,15 +20,6 @@ const firebaseConfig = {
   appId: "1:683581810189:web:7685ea2afd95644fb55744",
   measurementId: "G-TZ7E8Z2B8K"
 };
-
-const logOut = () => {
-  signOut(auth).then(() => {
-    window.localStorage.clear();
-  }).catch((error) => {
-    // An error happened.
-  });
-}
-
 
 firebase.initializeApp(firebaseConfig)
 let firestore = firebase.firestore();
@@ -45,9 +35,11 @@ const ChatPannel = prop => {
   root.classList.add('w-100');
   root.classList.add('h-100');
   
+  if(prop.roomName === ''){
+    console.log("PROP ROOM NAME EMPTY");
+  };
   const messageRef = firestore.collection(prop.roomName);
   const query = messageRef.orderBy('createdAt');
-
   const [messages] = useCollectionData(query, {idField: 'id'});
 
   const exitRoom = () => {
@@ -121,7 +113,6 @@ function Chatroom(prop) {
   }
 
   const getChattRoomName = async () => {
-    const root = document.getElementById('root');
 
     if((chatRoomName).trim() !== "") {
       setIsIn(true);
@@ -155,6 +146,10 @@ function App() {
   useEffect(() => {
     setIsSignedIn(window.localStorage.getItem('isSignedIn'));
   }, [])
+
+  useEffect(() => {
+    setIsSignedIn(window.localStorage.getItem('isSignedIn'));
+  }, [user]);
 
   const logIn = () => {
     setLoading(true);
